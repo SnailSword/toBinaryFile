@@ -1,9 +1,6 @@
 #coding:utf-8
 #! /bin/python
 import os
-# import sys
-# import os.path
-# import pickle
 import struct
 import random
 

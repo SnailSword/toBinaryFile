@@ -26,6 +26,9 @@ class BinaryFileConverter:
         self.dotPrintRatio = dotPrintRatio
         # 合成几个文件 0代表不合并
         self.merge = merge
+        # 存合并的数据的文件
+        self.mergedResultFileName = resultDir + '/mergedData.dat'
+        # 计数器
         self.i = 0
 
     def dfs(self, rootDir):
@@ -74,11 +77,12 @@ class BinaryFileConverter:
         if self.merge:
             if not os.path.exists(self.resultDir):
                 os.makedirs(self.resultDir)
-            self.resultFile = open(self.resultDir + '_allData.dat' ,'wb')
+            self.resultFile = open(self.mergedResultFileName ,'wb')
         self.dfs(self.originDir)
+        print('共写入了%d条数据', self.i)
         if self.merge:
             self.resultFile.close()
-        print(self.i)
+
 
 BinaryFileConverter(
     delimiter = ',', 
@@ -86,9 +90,9 @@ BinaryFileConverter(
     ignorLine = ['[', ']'], 
     types = ['.txt', '.json'], 
     originDir = './mobileNet', 
-    resultDir = './bin', 
+    resultDir = './binf', 
     ext = '.dat', 
-    formatter = 'd', 
+    formatter = 'f', 
     dotPrintRatio = 0, 
     merge = 1).convert()
 

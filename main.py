@@ -3,6 +3,7 @@
 import os
 import struct
 import random
+import math
 
 class BinaryFileConverter:
     def __init__(self, delimiter, ignorChar, ignorLine, types, originDir, resultDir, ext, formatter, dotPrintRatio, merge):
@@ -79,9 +80,21 @@ class BinaryFileConverter:
                 os.makedirs(self.resultDir)
             self.resultFile = open(self.mergedResultFileName ,'wb')
         self.dfs(self.originDir)
-        print('共写入了%d条数据', self.i)
-        if self.merge:
-            self.resultFile.close()
+        print('共写入了%s条数据' % self.i)
+        self.resultFile.close()
+        if self.merge > 1:
+            f = open(self.mergedResultFileName, 'rb')
+            data = f.read() # read the entire content of the file
+            f.close()
+            bytes = len(data)
+            size = (int(bytes / self.merge // 16) + 1) * 16
+            count = 1
+            for i in range(0, bytes + 1, size):
+                fni = self.resultDir + '/chunk_%s' % count
+                f = open(fni, 'wb')
+                f.write(data[i : i + size])
+                f.close()
+                count += 1
 
 
 BinaryFileConverter(
@@ -94,5 +107,4 @@ BinaryFileConverter(
     ext = '.dat', 
     formatter = 'f', 
     dotPrintRatio = 0, 
-    merge = 1).convert()
-
+    merge = 6).convert()
